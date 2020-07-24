@@ -453,33 +453,32 @@ public class ThreadLocal<T> {
          */
         private void set(ThreadLocal<?> key, Object value) {
 
-            // We don't use a fast path as with get() because it is at
-            // least as common to use set() to create new entries as
-            // it is to replace existing ones, in which case, a fast
-            // path would fail more often than not.
-
             Entry[] tab = table;
             int len = tab.length;
+
+            // 根据 ThreadLocal 的散列值，查找对应元素在数组中的位置
             int i = key.threadLocalHashCode & (len-1);
 
-            for (Entry e = tab[i];
-                 e != null;
-                 e = tab[i = nextIndex(i, len)]) {
+            // 采用“线性探测法”，寻找合适位置
+            for (Entry e = tab[i]; e != null; e = tab[i = nextIndex(i, len)]) {
                 ThreadLocal<?> k = e.get();
-
+                // key 存在，直接覆盖
                 if (k == key) {
                     e.value = value;
                     return;
                 }
-
+                // key == null，但是存在值（因为此处的e != null），说明之前的ThreadLocal对象已经被回收了
                 if (k == null) {
+                    // 用新元素替换陈旧的元素
                     replaceStaleEntry(key, value, i);
                     return;
                 }
             }
-
+            // ThreadLocal对应的key实例不存在也没有陈旧元素，new 一个
             tab[i] = new Entry(key, value);
             int sz = ++size;
+            // cleanSomeSlots 清楚陈旧的Entry（key == null）
+            // 如果没有清理陈旧的 Entry 并且数组中的元素大于了阈值，则进行 rehash
             if (!cleanSomeSlots(i, sz) && sz >= threshold)
                 rehash();
         }
