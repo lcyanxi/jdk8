@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/src/share/sample/lambda/BulkDataOperations/BulkDataOperations.iml" filepath="$PROJECT_DIR$/src/share/sample/lambda/BulkDataOperations/BulkDataOperations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/sample/annotations/DependencyChecker/PluginChecker/PluginChecker.iml" filepath="$PROJECT_DIR$/src/share/sample/annotations/DependencyChecker/PluginChecker/PluginChecker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/sample/annotations/DependencyChecker/Plugins/Plugins.iml" filepath="$PROJECT_DIR$/src/share/sample/annotations/DependencyChecker/Plugins/Plugins.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/sample/annotations/Validator/Validator.iml" filepath="$PROJECT_DIR$/src/share/sample/annotations/Validator/Validator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/demo/applets/applets.iml" filepath="$PROJECT_DIR$/src/share/demo/applets/applets.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/doc/doc.iml" filepath="$PROJECT_DIR$/src/share/doc/doc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/sample/forkjoin/forkjoin.iml" filepath="$PROJECT_DIR$/src/share/sample/forkjoin/forkjoin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/demo/java2d/java2d.iml" filepath="$PROJECT_DIR$/src/share/demo/java2d/java2d.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/jdk8.iml" filepath="$PROJECT_DIR$/.idea/jdk8.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/demo/jfc/jfc.iml" filepath="$PROJECT_DIR$/src/share/demo/jfc/jfc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/sample/jmx/jmx.iml" filepath="$PROJECT_DIR$/src/share/sample/jmx/jmx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/demo/jvmti/jvmti.iml" filepath="$PROJECT_DIR$/src/share/demo/jvmti/jvmti.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/sample/lambda/lambda.iml" filepath="$PROJECT_DIR$/src/share/sample/lambda/lambda.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/lib/lib.iml" filepath="$PROJECT_DIR$/src/share/lib/lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/demo/management/management.iml" filepath="$PROJECT_DIR$/src/share/demo/management/management.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/demo/nio/nio.iml" filepath="$PROJECT_DIR$/src/share/demo/nio/nio.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/sample/nio/nio1.iml" filepath="$PROJECT_DIR$/src/share/sample/nio/nio1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/demo/scripting/scripting.iml" filepath="$PROJECT_DIR$/src/share/demo/scripting/scripting.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/sample/scripting/scripting1.iml" filepath="$PROJECT_DIR$/src/share/sample/scripting/scripting1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/share.iml" filepath="$PROJECT_DIR$/src/share/share.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/sample/try-with-resources/try-with-resources.iml" filepath="$PROJECT_DIR$/src/share/sample/try-with-resources/try-with-resources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/share/sample/vm/vm.iml" filepath="$PROJECT_DIR$/src/share/sample/vm/vm.iml" />
+    </modules>
+  </component>
+</project>
