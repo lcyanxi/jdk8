@@ -296,22 +296,6 @@ public abstract class AbstractQueuedSynchronizer
     private void setHeadAndPropagate(Node node, int propagate) {
         Node h = head; // Record old head for check below
         setHead(node);
-        /*
-         * Try to signal next queued node if:
-         *   Propagation was indicated by caller,
-         *     or was recorded (as h.waitStatus either before
-         *     or after setHead) by a previous operation
-         *     (note: this uses sign-check of waitStatus because
-         *      PROPAGATE status may transition to SIGNAL.)
-         * and
-         *   The next node is waiting in shared mode,
-         *     or we don't know, because it appears null
-         *
-         * The conservatism in both of these checks may cause
-         * unnecessary wake-ups, but only when there are multiple
-         * racing acquires/releases, so most need signals now or soon
-         * anyway.
-         */
         if (propagate > 0 || h == null || h.waitStatus < 0 ||
                 (h = head) == null || h.waitStatus < 0) {
             Node s = node.next;
@@ -322,10 +306,9 @@ public abstract class AbstractQueuedSynchronizer
 
     // Utilities for various versions of acquire
 
+
     /**
-     * Cancels an ongoing attempt to acquire.
-     *
-     * @param node the node
+     * cancelled 节点生成
      */
     private void cancelAcquire(Node node) {
         // Ignore if node doesn't exist
@@ -334,36 +317,36 @@ public abstract class AbstractQueuedSynchronizer
 
         node.thread = null;
 
-        // Skip cancelled predecessors
+        // 通过前驱节点，跳过取消状态的 node
         Node pred = node.prev;
         while (pred.waitStatus > 0)
             node.prev = pred = pred.prev;
 
-        // predNext is the apparent node to unsplice. CASes below will
-        // fail if not, in which case, we lost race vs another cancel
-        // or signal, so no further action is necessary.
+        // 获取过滤后的前驱节点的后继节点
         Node predNext = pred.next;
-
-        // Can use unconditional write instead of CAS here.
-        // After this atomic step, other Nodes can skip past us.
-        // Before, we are free of interference from other threads.
         node.waitStatus = Node.CANCELLED;
 
-        // If we are the tail, remove ourselves.
+        // 如果当前节点是尾节点，将从后往前的第一个非取消状态的节点设置为尾节点
         if (node == tail && compareAndSetTail(node, pred)) {
             compareAndSetNext(pred, predNext, null);
         } else {
-            // If successor needs signal, try to set pred's next-link
-            // so it will get one. Otherwise wake it up to propagate.
             int ws;
+            /**
+             * 如果当前节点不是 head 的后继节点
+             *           1: 判断当前节点前驱节点的是否为 SIGNAL
+             *           2: 如果不是，则把前驱节点设置为 SINGAL 看是否成功
+             *           3: 再判断当前节点的前驱节点线程是否为 null
+             */
             if (pred != head &&
                     ((ws = pred.waitStatus) == Node.SIGNAL ||
                             (ws <= 0 && compareAndSetWaitStatus(pred, ws, Node.SIGNAL))) &&
                     pred.thread != null) {
+                // 把当前节点的前驱节点的后继指针指向当前节点的后继节点
                 Node next = node.next;
                 if (next != null && next.waitStatus <= 0)
                     compareAndSetNext(pred, predNext, next);
             } else {
+                // 如果当前节点是 head 的后继节点
                 unparkSuccessor(node);
             }
 
@@ -689,36 +672,11 @@ public abstract class AbstractQueuedSynchronizer
         return false;
     }
 
-    /**
-     * Acquires in shared mode, ignoring interrupts.  Implemented by
-     * first invoking at least once {@link #tryAcquireShared},
-     * returning on success.  Otherwise the thread is queued, possibly
-     * repeatedly blocking and unblocking, invoking {@link
-     * #tryAcquireShared} until success.
-     *
-     * @param arg the acquire argument.  This value is conveyed to
-     *            {@link #tryAcquireShared} but is otherwise uninterpreted
-     *            and can represent anything you like.
-     */
     public final void acquireShared(int arg) {
         if (tryAcquireShared(arg) < 0)
             doAcquireShared(arg);
     }
 
-    /**
-     * Acquires in shared mode, aborting if interrupted.  Implemented
-     * by first checking interrupt status, then invoking at least once
-     * {@link #tryAcquireShared}, returning on success.  Otherwise the
-     * thread is queued, possibly repeatedly blocking and unblocking,
-     * invoking {@link #tryAcquireShared} until success or the thread
-     * is interrupted.
-     *
-     * @param arg the acquire argument.
-     *            This value is conveyed to {@link #tryAcquireShared} but is
-     *            otherwise uninterpreted and can represent anything
-     *            you like.
-     * @throws InterruptedException if the current thread is interrupted
-     */
     public final void acquireSharedInterruptibly(int arg)
             throws InterruptedException {
         if (Thread.interrupted())
@@ -727,22 +685,7 @@ public abstract class AbstractQueuedSynchronizer
             doAcquireSharedInterruptibly(arg);
     }
 
-    /**
-     * Attempts to acquire in shared mode, aborting if interrupted, and
-     * failing if the given timeout elapses.  Implemented by first
-     * checking interrupt status, then invoking at least once {@link
-     * #tryAcquireShared}, returning on success.  Otherwise, the
-     * thread is queued, possibly repeatedly blocking and unblocking,
-     * invoking {@link #tryAcquireShared} until success or the thread
-     * is interrupted or the timeout elapses.
-     *
-     * @param arg          the acquire argument.  This value is conveyed to
-     *                     {@link #tryAcquireShared} but is otherwise uninterpreted
-     *                     and can represent anything you like.
-     * @param nanosTimeout the maximum number of nanoseconds to wait
-     * @return {@code true} if acquired; {@code false} if timed out
-     * @throws InterruptedException if the current thread is interrupted
-     */
+
     public final boolean tryAcquireSharedNanos(int arg, long nanosTimeout)
             throws InterruptedException {
         if (Thread.interrupted())
