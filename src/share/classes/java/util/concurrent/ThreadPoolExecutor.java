@@ -828,13 +828,9 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         return corePoolSize;
     }
 
+
     /**
-     * Starts a core thread, causing it to idly wait for work. This
-     * overrides the default policy of starting core threads only when
-     * new tasks are executed. This method will return {@code false}
-     * if all core threads have already been started.
-     *
-     * @return {@code true} if a thread was started
+     * 线程预热 新创建一个线程
      */
     public boolean prestartCoreThread() {
         return workerCountOf(ctl.get()) < corePoolSize &&
@@ -853,13 +849,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
             addWorker(null, false);
     }
 
-    /**
-     * Starts all core threads, causing them to idly wait for work. This
-     * overrides the default policy of starting core threads only when
-     * new tasks are executed.
-     *
-     * @return the number of threads started
-     */
+
     public int prestartAllCoreThreads() {
         int n = 0;
         while (addWorker(null, true))
@@ -872,22 +862,6 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         return allowCoreThreadTimeOut;
     }
 
-    /**
-     * Sets the policy governing whether core threads may time out and
-     * terminate if no tasks arrive within the keep-alive time, being
-     * replaced if needed when new tasks arrive. When false, core
-     * threads are never terminated due to lack of incoming
-     * tasks. When true, the same keep-alive policy applying to
-     * non-core threads applies also to core threads. To avoid
-     * continual thread replacement, the keep-alive time must be
-     * greater than zero when setting {@code true}. This method
-     * should in general be called before the pool is actively used.
-     *
-     * @param value {@code true} if should time out, else {@code false}
-     * @throws IllegalArgumentException if value is {@code true}
-     *                                  and the current keep-alive time is not greater than zero
-     * @since 1.6
-     */
     public void allowCoreThreadTimeOut(boolean value) {
         if (value && keepAliveTime <= 0)
             throw new IllegalArgumentException("Core threads must have nonzero keep alive times");
@@ -1190,28 +1164,12 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     protected void terminated() {
     }
 
-    /* Predefined RejectedExecutionHandlers */
-
     /**
-     * A handler for rejected tasks that runs the rejected task
-     * directly in the calling thread of the {@code execute} method,
-     * unless the executor has been shut down, in which case the task
-     * is discarded.
+     * 由调用者线程处理该任务
      */
     public static class CallerRunsPolicy implements RejectedExecutionHandler {
-        /**
-         * Creates a {@code CallerRunsPolicy}.
-         */
-        public CallerRunsPolicy() {
-        }
+        public CallerRunsPolicy() {}
 
-        /**
-         * Executes task r in the caller's thread, unless the executor
-         * has been shut down, in which case the task is discarded.
-         *
-         * @param r the runnable task requested to be executed
-         * @param e the executor attempting to execute this task
-         */
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
             if (!e.isShutdown()) {
                 r.run();
@@ -1220,23 +1178,10 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     }
 
     /**
-     * A handler for rejected tasks that throws a
-     * {@code RejectedExecutionException}.
+     * 丢掉任务并抛出异常
      */
     public static class AbortPolicy implements RejectedExecutionHandler {
-        /**
-         * Creates an {@code AbortPolicy}.
-         */
-        public AbortPolicy() {
-        }
-
-        /**
-         * Always throws RejectedExecutionException.
-         *
-         * @param r the runnable task requested to be executed
-         * @param e the executor attempting to execute this task
-         * @throws RejectedExecutionException always
-         */
+        public AbortPolicy() {}
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
             throw new RejectedExecutionException("Task " + r.toString() +
                     " rejected from " +
@@ -1245,47 +1190,19 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     }
 
     /**
-     * A handler for rejected tasks that silently discards the
-     * rejected task.
+     * 丢弃任务，但不抛出异常
      */
     public static class DiscardPolicy implements RejectedExecutionHandler {
-        /**
-         * Creates a {@code DiscardPolicy}.
-         */
-        public DiscardPolicy() {
-        }
+        public DiscardPolicy() {}
 
-        /**
-         * Does nothing, which has the effect of discarding task r.
-         *
-         * @param r the runnable task requested to be executed
-         * @param e the executor attempting to execute this task
-         */
-        public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
-        }
+        public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {}
     }
 
     /**
-     * A handler for rejected tasks that discards the oldest unhandled
-     * request and then retries {@code execute}, unless the executor
-     * is shut down, in which case the task is discarded.
+     * 丢弃队列最前面的任务
      */
     public static class DiscardOldestPolicy implements RejectedExecutionHandler {
-        /**
-         * Creates a {@code DiscardOldestPolicy} for the given executor.
-         */
-        public DiscardOldestPolicy() {
-        }
-
-        /**
-         * Obtains and ignores the next task that the executor
-         * would otherwise execute, if one is immediately available,
-         * and then retries execution of task r, unless the executor
-         * is shut down, in which case task r is instead discarded.
-         *
-         * @param r the runnable task requested to be executed
-         * @param e the executor attempting to execute this task
-         */
+        public DiscardOldestPolicy() {}
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
             if (!e.isShutdown()) {
                 e.getQueue().poll();
